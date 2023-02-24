@@ -4,7 +4,8 @@
     {
         static void Main(string[] args)
         {
-            ComputeEmpWage.getComputeEmpWage();
+            ComputeEmpWage.getComputeEmpWage("DMart",20,2,10);
+            ComputeEmpWage.getComputeEmpWage("Reliance",10,4,20);
             Console.ReadLine();
         }
     }
