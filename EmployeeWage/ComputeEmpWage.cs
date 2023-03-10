@@ -1,62 +1,61 @@
-﻿using System;
+﻿using EmployeeWage;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EmployeeWage
+namespace EmployeeWagesUCPrograms
 {
-    public class ComputeEmpWage
+    public class EmployeeWageBuilder
     {
-        public const int IS_PART_TIME = 1;
-        public const int IS_FULL_TIME = 2;
+        public const int IS_PARTTIME = 1;
+        public const int IS_FULLTIME = 2;
 
-        private string company;
-        private int empRatePerHour;
-        private int numOfWorkingDay;
-        private int maxHoursPerMonth;
-        private int totalEmpWage;
-
-        public ComputeEmpWage(string company, int empRatePerhour, int numOfWorkingDay, int maxHoursPerMonth)
+        public int numOfCompany = 0;
+        public CompanyEmpWage[] companyEmpWageArray;
+        public EmployeeWageBuilder()
         {
-            this.company = company;
-            this.empRatePerHour = empRatePerhour;
-            this.numOfWorkingDay = numOfWorkingDay;
-            this.maxHoursPerMonth = maxHoursPerMonth;
+            this.companyEmpWageArray = new CompanyEmpWage[5];
         }
-        public void computeEmpWage()
+        public void AddCompanyEmpwage(string company, int empRatePerHr, int numOfWorkingDays, int maxHrsPerMonth)
         {
-            
-                int empHrs = 0, totalEmpHrs = 0, totalWorkingdays = 0;
-
-                while (totalEmpHrs <= this.maxHoursPerMonth && totalWorkingdays < this.numOfWorkingDay)
+            companyEmpWageArray[this.numOfCompany] = new CompanyEmpWage(company, empRatePerHr, numOfWorkingDays, maxHrsPerMonth);
+            numOfCompany++;
+        }
+        public void ComputeEmpWageForCompany()
+        {
+            for (int i = 0; i < numOfCompany; i++)
+            {
+                companyEmpWageArray[i].SetTotalEmpWages(this.ComputeEmpWage(this.companyEmpWageArray[i]));
+                Console.WriteLine(this.companyEmpWageArray[i].ToString());
+            }
+        }
+        public int ComputeEmpWage(CompanyEmpWage companyEmpWage)
+        {
+            int empHrs = 0, totalEmpHrs = 0, totalWorkingDays = 0;
+            while (totalEmpHrs < companyEmpWage.maxHrsPerMonth && totalWorkingDays < companyEmpWage.numOfWorkingDays)
+            {
+                Random random = new Random();
+                int empCheck = random.Next(0, 3);
+                totalWorkingDays++;
+                switch (empCheck)
                 {
-                    totalWorkingdays++;
-                    Random random = new Random();
-                    int empCheck = random.Next(0, 3);
-                    switch (empCheck)
-                    {
-                        case IS_PART_TIME:
-                            empHrs = 4;
-                            break;
-                        case IS_FULL_TIME:
-                            empHrs = 8;
-                            break;
-                        default:
-                            empHrs = 0;
-                            break;
-                    }
-                    totalEmpHrs += empHrs;
-                    Console.WriteLine("Day# : {0} Emp Hrs : {1}", totalWorkingdays,empHrs);
+                    case IS_PARTTIME:
+                        empHrs = 4;
+                        break;
+                    case IS_FULLTIME:
+                        empHrs = 8;
+                        break;
+                    default:
+                        empHrs = 0;
+                        break;
                 }
 
-                totalEmpWage = totalEmpHrs * this.empRatePerHour;
-                Console.WriteLine("Total Emp Wage for Company : \n{0} is : {1}", company,totalEmpWage);
-        }
-        public string toString()
-        {
-            return "Total Emp Wage for Company : " + this.company + "is" + this.totalEmpWage;
+                totalEmpHrs = totalEmpHrs + empHrs;
+                Console.WriteLine("Day#:" + totalWorkingDays + "Emp Hrs: " + empHrs);
+            }
+            return totalEmpHrs * companyEmpWage.empRatePerHr;
         }
     }
 }
